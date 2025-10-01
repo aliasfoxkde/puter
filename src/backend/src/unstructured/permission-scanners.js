@@ -249,7 +249,7 @@ const PERMISSION_SCANNERS = [
                             has_terminal,
                             permission,
                             data: issuer_group[permission],
-                            holder_username: actor.type.user.username,
+                            holder_username: actor.type.user?.username,
                             issuer_username,
                             reading: issuer_reading,
                             group_id: group_uids[group_uid].id,
@@ -313,7 +313,7 @@ const PERMISSION_SCANNERS = [
                     permission: row.permission,
                     data: row.extra,
                     holder_username: actor.type.user.username,
-                    issuer_username: issuer_actor.type.user.username,
+                    issuer_username: issuer_actor.type.user?.username,
                     reading: issuer_reading,
                     group_id: row.group_id,
                 });
@@ -347,7 +347,7 @@ const PERMISSION_SCANNERS = [
                         $: 'option',
                         permission,
                         data,
-                        holder_username: actor.type.user.username,
+                        holder_username: actor.type.user?.username,
                         source: 'virtual-group',
                         vgroup_id: group.id,
                     });
@@ -387,7 +387,7 @@ const PERMISSION_SCANNERS = [
                             source: 'user-app-implied',
                             by: 'user-app-hc-1',
                             data: implied,
-                            issuer_username: actor.type.user.username,
+                            issuer_username: actor.type.user?.username,
                             reading: issuer_reading,
                         });
                     }
@@ -406,7 +406,7 @@ const PERMISSION_SCANNERS = [
                             source: 'user-app-implied',
                             by: 'user-app-hc-2',
                             data: implicit_permissions[permission],
-                            issuer_username: actor.type.user.username,
+                            issuer_username: actor.type.user?.username,
                             reading: issuer_reading,
                         });
                     }
@@ -444,7 +444,7 @@ const PERMISSION_SCANNERS = [
                     permission: row.permission,
                     has_terminal,
                     data: row.extra,
-                    issuer_username: actor.type.user.username,
+                    issuer_username: actor.type.user?.username,
                     reading: issuer_reading,
                 });
             }
@@ -495,7 +495,7 @@ const PERMISSION_SCANNERS = [
                     permission: row.permission,
                     has_terminal,
                     data: row.extra,
-                    issuer_username: actor.type.user.username,
+                    issuer_username: actor.type.user?.username,
                     reading: issuer_reading,
                 });
             }

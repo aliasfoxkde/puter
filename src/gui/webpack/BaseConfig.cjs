@@ -57,6 +57,8 @@ module.exports = async (options = {}) => {
     }
 
     const config = {};
+    // Ensure webpack resolves entries relative to the GUI directory even when invoked from repo root
+    config.context = path.resolve(__dirname, '..');
     config.entry = [
         './src/init_sync.js',
         './src/init_async.js',

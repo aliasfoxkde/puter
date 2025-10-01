@@ -18,7 +18,7 @@ class PermissiveCreditService extends BaseService {
 
         const svc_event = this.services.get('event');
         svc_event.on(`credit.check-available`, (_, event) => {
-            const username = event.actor.type.user.username;
+            const username = event.actor?.type?.user?.username ?? 'unknown';
             event.available = this.get_user_credit_(username);
 
             // Useful for testing with Dall-E
@@ -41,14 +41,14 @@ class PermissiveCreditService extends BaseService {
         });
         
         svc_event.on('credit.record-cost', (_, event) => {
-            const username = event.actor.type.user.username;
+            const username = event.actor?.type?.user?.username ?? 'unknown';
             event.available = this.consume_user_credit_(
                 username, event.cost);
             if ( ! this.config.simulated_credit ) return;
 
             // Update usage settings tab in UI
             svc_event.emit('outer.gui.usage.update', {
-                user_id_list: [event.actor.type.user.id],
+                user_id_list: event.actor?.type?.user?.id ? [event.actor.type.user.id] : [],
                 response: {
                     id: 'dev-credit',
                     used: this.config.simulated_credit -

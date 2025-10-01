@@ -233,7 +233,8 @@ class UserActorType extends ActorType {
      * @returns {string} The UID in format 'user:{uuid}'.
      */
     get uid () {
-        return 'user:' + this.user.uuid;
+        const uuid = this.user?.uuid ?? '<unknown>';
+        return 'user:' + uuid;
     }
     
     /**
@@ -264,7 +265,9 @@ class AppUnderUserActorType extends ActorType {
      * @returns {string} The UID in format 'app-under-user:{user_uuid}:{app_uid}'.
      */
     get uid () {
-        return 'app-under-user:' + this.user.uuid + ':' + this.app.uid;
+        const user_uuid = this.user?.uuid ?? '<unknown>';
+        const app_uid = this.app?.uid ?? '<unknown>';
+        return 'app-under-user:' + user_uuid + ':' + app_uid;
     }
     
     /**

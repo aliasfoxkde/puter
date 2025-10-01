@@ -187,6 +187,35 @@ async function build(options){
     for ( const to_copy of copy_these ) {
         recursive_copy(path.join(__dirname, 'src', to_copy), path.join(__dirname, 'dist', to_copy));
     }
+
+    // -----------------------------------------------
+    // Generate a static index.html for static hosting (e.g., Cloudflare Pages)
+    // -----------------------------------------------
+    try {
+        const html = generateDevHtml({
+            env: PUTER_ENV,
+            title: 'Puter',
+            company: 'Puter Technologies Inc.',
+            description: 'Personal Cloud Computer',
+            app_description: undefined,
+            short_description: 'Your personal cloud computer',
+            origin: '',
+            domain: '',
+            social_card: '/images/social-card.png',
+            api_origin: process.env.PUTER_API_ORIGIN || undefined,
+            gui_origin: process.env.PUTER_GUI_ORIGIN || undefined,
+        });
+        fs.writeFileSync(path.join(__dirname, 'dist', 'index.html'), html);
+    } catch (e) {
+        console.warn('Warning: failed to generate index.html for static hosting:', e?.message || e);
+    }
+
+    // Cloudflare Pages SPA routing
+    try {
+        fs.writeFileSync(path.join(__dirname, 'dist', '_redirects'), '/*\t/index.html\t200\n');
+    } catch (e) {
+        console.warn('Warning: failed to write _redirects for Cloudflare Pages:', e?.message || e);
+    }
 }
 
 /**
@@ -337,10 +366,14 @@ function generateDevHtml(options){
         // ----------------------------------------
         // Initialize GUI with config options
         // ----------------------------------------
+        // Initialize GUI with optional runtime configuration (e.g., API origin)
+        const guiInitConfig = {};
+        if (options.api_origin) guiInitConfig.api_origin = options.api_origin;
+        if (options.gui_origin) guiInitConfig.gui_origin = options.gui_origin;
         h += `
         <script type="text/javascript">
         window.addEventListener('load', function() {`
-            h += `gui()`;
+            h += `gui(${JSON.stringify(guiInitConfig)})`;
         h += `});
         </script>`;
 
