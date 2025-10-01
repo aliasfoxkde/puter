@@ -108,5 +108,21 @@ After Pages deploys:
 - Ensured webpack context works when building from repo root
 - index.html now calls gui({...}) with api_origin/gui_origin when provided via env
 
+### Troubleshooting: Git Submodule Issues
+Cloudflare Pages may attempt to initialize git submodules automatically during the clone phase. If submodules use SSH URLs (git@github.com:...), the clone can fail with an error like:
+
+- "Failed: error occurred while updating repository submodules"
+
+Resolution applied in this repo:
+- Switched submodule URLs in .gitmodules to public HTTPS URLs so Cloudflare Pages can fetch them without SSH keys:
+  - submodules/v86 → https://github.com/HeyPuter/v86.git
+  - submodules/twisp → https://github.com/MercuryWorkshop/twisp.git
+  - submodules/epoxy-tls → https://github.com/MercuryWorkshop/epoxy-tls.git
+  - submodules/wiki already used HTTPS
+
+Notes:
+- The GUI static build in src/gui does not require these submodules, but leaving them fetchable avoids clone failures on Pages.
+- If you prefer to avoid submodule fetching entirely, you could remove .gitmodules in a dedicated branch used only by Pages. However, using HTTPS URLs is the simplest, least disruptive fix.
+
 You can now deploy the GUI as a static site on Cloudflare Pages that connects to your Puter backend.
 

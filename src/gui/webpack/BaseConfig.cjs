@@ -1,18 +1,18 @@
 /*
  * Copyright (C) 2024-present Puter Technologies Inc.
- * 
+ *
  * This file is part of Puter.
- * 
+ *
  * Puter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -23,9 +23,9 @@ const EmitPlugin = require('./EmitPlugin.cjs');
 
 module.exports = async (options = {}) => {
     const extension_directories = [];
-    
+
     extension_directories.push(path.join(__dirname, '../src/extensions'));
-    
+
     if ( process.env.PUTER_GUI_EXTENSION_PATHS ) {
         const paths = process.env.PUTER_GUI_EXTENSION_PATHS.split(';');
         extension_directories.push(...paths);
@@ -81,5 +81,13 @@ module.exports = async (options = {}) => {
             dir: path.join(__dirname, '../src/icons'),
         }),
     ];
+    // Resolve local putility workspace without requiring workspace linking
+    config.resolve = {
+        alias: {
+            '@heyputer/putility': path.resolve(__dirname, '../../putility/index.js'),
+        },
+        extensions: ['.js'],
+    };
+
     return config;
 };

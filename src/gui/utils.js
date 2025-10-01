@@ -135,6 +135,7 @@ async function build(options){
             env: PUTER_ENV,
         })),
         mode: 'production',
+        devtool: 'source-map',
         optimization: {
             minimize: true,
         },
