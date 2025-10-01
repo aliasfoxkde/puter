@@ -53,8 +53,9 @@ Set these in your Cloudflare Pages project:
 
 - Build command:
 ```
-npm ci && npm run build
+npm install --ignore-scripts --workspaces=false && npm run build
 ```
+Note: The repository does not include a package-lock.json, so `npm ci` would fail. We also disable workspaces during install and use a webpack alias so the GUI build does not rely on workspace linking or run workspace scripts during install.
 
 - Output directory:
 ```
