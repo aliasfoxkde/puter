@@ -491,7 +491,11 @@ window.update_auth_data = async (auth_token, user)=>{
     localStorage.setItem('user', JSON.stringify(to_storable_user(user)));
 
     // re-initialize the Puter.js objects with the new auth token
-    puter.setAuthToken(auth_token, window.api_origin)
+    if (!window.static_mode) {
+        puter.setAuthToken(auth_token, window.api_origin);
+    } else {
+        console.debug('[Static Mode] Skipping puter.setAuthToken');
+    }
 
     //update the logged_in_users array entry for this user
     if(window.user){

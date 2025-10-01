@@ -276,21 +276,30 @@ window.initgui = async function(options){
     let picked_a_user_for_sdk_login = false;
 
     // update SDK if auth_token is different from the one in the SDK
-    if(window.auth_token && puter.authToken !== window.auth_token)
+    if(window.auth_token && puter.authToken !== window.auth_token && !window.static_mode)
         puter.setAuthToken(window.auth_token);
     // update SDK if api_origin is different from the one in the SDK
-    if(window.api_origin && puter.APIOrigin !== window.api_origin)
+    if(window.api_origin && puter.APIOrigin !== window.api_origin && !window.static_mode)
         puter.setAPIOrigin(window.api_origin);
 
+    if (window.static_mode) {
+        console.debug('[Static Mode] Skipping Puter SDK auth/origin setup');
+    }
+
     // Print the version to the console
-    puter.os.version()
-    .then(res => {
-        const deployed_date = new Date(res.deploy_timestamp);
-        console.log(`Your Puter information:\n• Version: ${(res.version)}\n• Server: ${(res.location)}\n• Deployed: ${(deployed_date)}`);
-    })
-    .catch(error => {
-        console.error("Failed to fetch server info:", error);
-    });
+    if (!window.static_mode) {
+        puter.os.version()
+        .then(res => {
+            const deployed_date = new Date(res.deploy_timestamp);
+            console.log(`Your Puter information:\n• Version: ${(res.version)}\n• Server: ${(res.location)}\n• Deployed: ${(deployed_date)}`);
+        })
+        .catch(error => {
+            console.error("Failed to fetch server info:", error);
+        });
+    } else {
+        console.debug('[Static Mode] Skipping server version check');
+        console.log('Your Puter information:\n• Version: Static Mode\n• Server: Local\n• Deployed: N/A');
+    }
 
     // Checks the type of device the user is on (phone, tablet, or desktop).
     // Depending on the device type, it sets a class attribute on the body tag
@@ -926,7 +935,7 @@ window.initgui = async function(options){
     // -------------------------------------------------------------------------------------
     // Un-authed but not first visit -> try to log in/sign up
     // -------------------------------------------------------------------------------------
-    if(!window.is_auth() && (!window.first_visit_ever || window.disable_temp_users)){
+    if(!window.is_auth() && (!window.first_visit_ever || window.disable_temp_users) && !window.static_mode){
         if(window.logged_in_users.length > 0){
             UIWindowSessionList();
         }
@@ -950,7 +959,7 @@ window.initgui = async function(options){
     // -------------------------------------------------------------------------------------
     // Un-authed and first visit ever -> create temp user with Turnstile challenge
     // -------------------------------------------------------------------------------------
-    else if(!window.is_auth() && window.first_visit_ever && !window.disable_temp_users){
+    else if(!window.is_auth() && window.first_visit_ever && !window.disable_temp_users && !window.static_mode){
         let referrer;
         try{
             referrer = new URL(window.location.href).pathname;
@@ -1048,6 +1057,24 @@ window.initgui = async function(options){
             // No Turnstile configured, proceed without challenge
             createTempUser();
         }
+    }
+
+    // -------------------------------------------------------------------------------------
+    // Static mode -> bypass authentication and trigger login event to load desktop
+    // -------------------------------------------------------------------------------------
+    if (window.static_mode && !window.is_auth()) {
+        console.debug('[Static Mode] Bypassing authentication; triggering login event');
+
+        // Set up minimal user data for static mode
+        window.user = {
+            uuid: 'static-user',
+            username: 'static-user',
+            email: 'static@example.com',
+            is_temp: false
+        };
+
+        // Defer login event until after handlers are attached to ensure UIDesktop/UI components are ready
+        setTimeout(() => { $(document).trigger('login'); }, 0);
     }
 
     // if there is at least one window open (only non-Explorer windows), ask user for confirmation when navigating away from puter

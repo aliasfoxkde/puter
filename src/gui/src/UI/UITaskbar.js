@@ -29,24 +29,38 @@ async function UITaskbar(options){
     options.content = options.content ?? '';
 
     // if first visit ever, set taskbar position to left
-    if(window.first_visit_ever){
+    if(window.first_visit_ever && !window.static_mode){
         await puter.kv.set('taskbar_position', 'left');
     }
 
     // Load taskbar position preference from storage
-    let taskbar_position = await puter.kv.get('taskbar_position');
+    let taskbar_position;
+    if (!window.static_mode) {
+        taskbar_position = await puter.kv.get('taskbar_position');
+    } else {
+        console.debug('[Static Mode] Skipping taskbar position KV read; using default');
+        taskbar_position = null;
+    }
     // if this is not first visit, set taskbar position to bottom since it's from a user that
     // used puter before customizing taskbar position was added and the taskbar position was set to bottom
     if (!taskbar_position) {
         taskbar_position = 'bottom'; // default position
-        await puter.kv.set('taskbar_position', taskbar_position);
+        if (!window.static_mode) {
+            await puter.kv.set('taskbar_position', taskbar_position);
+        } else {
+            console.debug('[Static Mode] Skipping taskbar position KV write; using default bottom');
+        }
     }
-    
+
     // Force bottom position on mobile devices
     if (isMobile.phone || isMobile.tablet) {
         taskbar_position = 'bottom';
         // Update the stored preference to bottom for mobile devices
-        await puter.kv.set('taskbar_position', taskbar_position);
+        if (!window.static_mode) {
+            await puter.kv.set('taskbar_position', taskbar_position);
+        } else {
+            console.debug('[Static Mode] Skipping mobile taskbar position KV write; using bottom');
+        }
     }
     
     // Set global taskbar position
@@ -106,16 +120,21 @@ async function UITaskbar(options){
             // In the rare case that launch_apps is not populated yet, get it from the server
             // then populate the popover
             if(!window.launch_apps || !window.launch_apps.recent || window.launch_apps.recent.length === 0){
-                // get launch apps
-                window.launch_apps = await $.ajax({
-                    url: window.api_origin + "/get-launch-apps?icon_size=64",
-                    type: 'GET',
-                    async: true,
-                    contentType: "application/json",
-                    headers: {
-                        "Authorization": "Bearer "+window.auth_token
-                    },
-                });
+                if (!window.static_mode) {
+                    // get launch apps
+                    window.launch_apps = await $.ajax({
+                        url: window.api_origin + "/get-launch-apps?icon_size=64",
+                        type: 'GET',
+                        async: true,
+                        contentType: "application/json",
+                        headers: {
+                            "Authorization": "Bearer "+window.auth_token
+                        },
+                    });
+                } else {
+                    console.debug('[Static Mode] Skipping launch apps fetch; using empty list');
+                    window.launch_apps = { recent: [], recommended: [] };
+                }
             }
             
             let apps_str = '';
@@ -478,7 +497,11 @@ window.update_taskbar_position = async function(new_position) {
     }
     
     // Store the new position
-    puter.kv.set('taskbar_position', new_position);
+    if (!window.static_mode) {
+        puter.kv.set('taskbar_position', new_position);
+    } else {
+        console.debug('[Static Mode] Skipping taskbar position KV write');
+    }
     window.taskbar_position = new_position;
     
     // Remove old position classes and add new one
