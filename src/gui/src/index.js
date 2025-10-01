@@ -66,7 +66,7 @@ window.gui = async (options) => {
 
     if (window.gui_env === 'dev2') {
         await window.loadScript('/puter.js/v2');
-        await window.loadCSS('/dist/bundle.min.css');
+        try { await window.loadCSS('/bundle.min.css'); } catch(e) { try { await window.loadCSS('/dist/bundle.min.css'); } catch(_) {} }
     }
 
     // PROD: load the minified bundles if we are in production mode
@@ -75,7 +75,7 @@ window.gui = async (options) => {
     else if(window.gui_env === "prod"){
         await window.loadScript('https://js.puter.com/v2/');
         // Load the minified bundles
-        await window.loadCSS('/dist/bundle.min.css');
+        try { await window.loadCSS('/bundle.min.css'); } catch(e) { try { await window.loadCSS('/dist/bundle.min.css'); } catch(_) {} }
     }
 
     // Load Cloudflare Turnstile script

@@ -214,6 +214,28 @@ async function build(options){
     // Cloudflare Pages SPA routing
     try {
         fs.writeFileSync(path.join(__dirname, 'dist', '_redirects'), '/*\t/index.html\t200\n');
+        // Overwrite _redirects with asset-first rules, then SPA fallbacks
+        try {
+            fs.writeFileSync(path.join(__dirname, 'dist', '_redirects'), [
+                '/gui.js 200',
+                '/bundle.min.js 200',
+                '/bundle.min.js.map 200',
+                '/bundle.min.css 200',
+                '/favicons/* 200',
+                '/images/* 200',
+                '/fonts/* 200',
+                '/manifest.json 200',
+                '/favicon.ico 200',
+                '/ /index.html 200',
+                '/login /index.html 200',
+                '/signup /index.html 200',
+                '/app/* /index.html 200',
+                '/* /index.html 200',
+            ].join('\n'));
+        } catch (e) {
+            console.warn('Warning: failed to overwrite _redirects for Cloudflare Pages:', e?.message || e);
+        }
+
     } catch (e) {
         console.warn('Warning: failed to write _redirects for Cloudflare Pages:', e?.message || e);
     }
@@ -353,7 +375,7 @@ function generateDevHtml(options){
 
         // PROD: gui.js
         if(options.env === 'prod'){
-            h += `<script src="/dist/gui.js"></script>`;
+            h += `<script src="/gui.js"></script>`;
         }
         // DEV: load every JS file individually
         else{
