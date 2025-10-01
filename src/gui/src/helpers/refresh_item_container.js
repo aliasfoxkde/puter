@@ -69,29 +69,45 @@ const refresh_item_container = function(el_item_container, options){
     // --------------------------------------------------------
     // Folder's configs and properties
     // --------------------------------------------------------
-    puter.fs.stat({path: container_path, consistency: options.consistency ?? 'eventual'}).then(fsentry => {
-        if(el_window){
-            $(el_window).attr('data-uid', fsentry.id);
-            $(el_window).attr('data-sort_by', fsentry.sort_by ?? 'name');
-            $(el_window).attr('data-sort_order', fsentry.sort_order ?? 'asc');
-            $(el_window).attr('data-layout', fsentry.layout ?? 'icons');
-            // data-name
-            $(el_window).attr('data-name', html_encode(fsentry.name));
-            // data-path
+    if (window.static_mode) {
+        // Provide sensible defaults in static mode
+        if (el_window) {
+            $(el_window).attr('data-uid', '');
+            $(el_window).attr('data-sort_by', 'name');
+            $(el_window).attr('data-sort_order', 'asc');
+            $(el_window).attr('data-layout', 'icons');
+            $(el_window).attr('data-name', html_encode(path.basename(container_path ?? 'Desktop')));
             $(el_window).attr('data-path', html_encode(container_path));
             $(el_window).find('.window-navbar-path-input').val(container_path);
             $(el_window).find('.window-navbar-path-input').attr('data-path', container_path);
         }
-        $(el_item_container).attr('data-sort_by', fsentry.sort_by ?? 'name');
-        $(el_item_container).attr('data-sort_order', fsentry.sort_order ?? 'asc');
-        // update layout
-        if(el_window && el_window.length > 0)
-            window.update_window_layout(el_window, fsentry.layout);
-        //
-        if(fsentry.layout === 'details'){
-            window.update_details_layout_sort_visuals(el_window, fsentry.sort_by, fsentry.sort_order);
-        }
-    });
+        $(el_item_container).attr('data-sort_by', 'name');
+        $(el_item_container).attr('data-sort_order', 'asc');
+    } else {
+        puter.fs.stat({path: container_path, consistency: options.consistency ?? 'eventual'}).then(fsentry => {
+            if(el_window){
+                $(el_window).attr('data-uid', fsentry.id);
+                $(el_window).attr('data-sort_by', fsentry.sort_by ?? 'name');
+                $(el_window).attr('data-sort_order', fsentry.sort_order ?? 'asc');
+                $(el_window).attr('data-layout', fsentry.layout ?? 'icons');
+                // data-name
+                $(el_window).attr('data-name', html_encode(fsentry.name));
+                // data-path
+                $(el_window).attr('data-path', html_encode(container_path));
+                $(el_window).find('.window-navbar-path-input').val(container_path);
+                $(el_window).find('.window-navbar-path-input').attr('data-path', container_path);
+            }
+            $(el_item_container).attr('data-sort_by', fsentry.sort_by ?? 'name');
+            $(el_item_container).attr('data-sort_order', fsentry.sort_order ?? 'asc');
+            // update layout
+            if(el_window && el_window.length > 0)
+                window.update_window_layout(el_window, fsentry.layout);
+            //
+            if(fsentry.layout === 'details'){
+                window.update_details_layout_sort_visuals(el_window, fsentry.sort_by, fsentry.sort_order);
+            }
+        });
+    }
 
     // is_directoryPicker
     let is_directoryPicker = $(el_window).attr('data-is_directoryPicker');
@@ -108,6 +124,16 @@ const refresh_item_container = function(el_item_container, options){
     $(el_item_container).find('.item').removeItems()
 
     // get items
+    if (window.static_mode) {
+        // In static mode, show empty folder without calling backend
+        clearTimeout(loading_timeout);
+        $(loading_spinner).hide();
+        $(el_item_container).find('.explorer-empty-message').show();
+        if (container_path === window.trash_path && el_window_head_icon) {
+            $(el_window_head_icon).attr('src', window.icons['trash.svg']);
+        }
+        return;
+    }
     puter.fs.readdir({path: container_path, consistency: options.consistency ?? 'eventual'}).then((fsentries)=>{
         // Check if the same folder is still loading since el_item_container's
         // data-path might have changed by other operations while waiting for the response to this `readdir`.

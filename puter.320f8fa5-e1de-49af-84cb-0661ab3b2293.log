@@ -1,0 +1,168 @@
+2025-10-01T15:12:22.371972Z	Cloning repository...
+2025-10-01T15:12:28.592818Z	From https://github.com/aliasfoxkde/puter
+2025-10-01T15:12:28.593505Z	 * branch            aa80dd775b6d7d60447b0e564486556d86665fd0 -> FETCH_HEAD
+2025-10-01T15:12:28.593635Z	
+2025-10-01T15:12:28.817464Z	HEAD is now at aa80dd7 Static mode: render desktop without backend in authed path (avoid puter.fs.stat) to fix post-login blue screen
+2025-10-01T15:12:28.817953Z	
+2025-10-01T15:12:32.158536Z	Submodule 'submodules/epoxy-tls' (https://github.com/MercuryWorkshop/epoxy-tls.git) registered for path 'submodules/epoxy-tls'
+2025-10-01T15:12:32.159011Z	Submodule 'submodules/twisp' (https://github.com/MercuryWorkshop/twisp.git) registered for path 'submodules/twisp'
+2025-10-01T15:12:32.159166Z	Submodule 'submodules/v86' (https://github.com/HeyPuter/v86.git) registered for path 'submodules/v86'
+2025-10-01T15:12:32.159273Z	Submodule 'submodules/wiki' (https://github.com/HeyPuter/puter.wiki.git) registered for path 'submodules/wiki'
+2025-10-01T15:12:32.159366Z	Cloning into '/opt/buildhome/clone/submodules/epoxy-tls'...
+2025-10-01T15:12:32.159461Z	Cloning into '/opt/buildhome/clone/submodules/twisp'...
+2025-10-01T15:12:32.159554Z	Cloning into '/opt/buildhome/clone/submodules/v86'...
+2025-10-01T15:12:32.159641Z	Cloning into '/opt/buildhome/clone/submodules/wiki'...
+2025-10-01T15:12:32.159733Z	Submodule path 'submodules/epoxy-tls': checked out 'd6f1a8da43c11410595a7710613786d4fc37fa38'
+2025-10-01T15:12:32.159954Z	Submodule path 'submodules/twisp': checked out 'ae6e6527d79c5206c305f27658ff16a6d2840748'
+2025-10-01T15:12:32.160214Z	Submodule path 'submodules/v86': checked out 'd9c36dfccface164a34e20a7f44658fc5b7a6cc0'
+2025-10-01T15:12:32.160361Z	Submodule path 'submodules/wiki': checked out 'f6fd3b407bb2b6a1ddd3be49c99fddbbdf01b242'
+2025-10-01T15:12:32.160493Z	
+2025-10-01T15:12:32.160675Z	Using v2 root directory strategy
+2025-10-01T15:12:32.186953Z	Success: Finished cloning repository files
+2025-10-01T15:12:33.907547Z	Checking for configuration in a Wrangler configuration file (BETA)
+2025-10-01T15:12:33.908151Z	
+2025-10-01T15:12:35.044747Z	No wrangler.toml file found. Continuing.
+2025-10-01T15:12:35.116187Z	Detected the following tools from environment: npm@10.9.2, nodejs@22.16.0
+2025-10-01T15:12:35.11696Z	Installing project dependencies: npm install --progress=false
+2025-10-01T15:13:14.792424Z	npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+2025-10-01T15:13:15.014807Z	npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+2025-10-01T15:13:16.607496Z	npm warn deprecated are-we-there-yet@2.0.0: This package is no longer supported.
+2025-10-01T15:13:16.673862Z	npm warn deprecated gauge@3.0.2: This package is no longer supported.
+2025-10-01T15:13:17.184378Z	npm warn deprecated acorn-import-assertions@1.9.0: package has been renamed to acorn-import-attributes
+2025-10-01T15:13:17.281834Z	npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2025-10-01T15:13:17.855656Z	npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2025-10-01T15:13:18.022208Z	npm warn deprecated npmlog@5.0.1: This package is no longer supported.
+2025-10-01T15:13:18.043971Z	npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-10-01T15:13:18.154642Z	npm warn deprecated querystring@0.2.0: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
+2025-10-01T15:13:18.319869Z	npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+2025-10-01T15:13:20.63387Z	npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-10-01T15:13:20.7579Z	npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-10-01T15:13:21.012771Z	npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-10-01T15:13:21.356466Z	npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-10-01T15:13:21.570594Z	npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-10-01T15:13:24.724423Z	npm warn deprecated sinon@15.2.0: 16.1.1
+2025-10-01T15:13:25.241707Z	npm warn deprecated @opentelemetry/otlp-proto-exporter-base@0.49.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+2025-10-01T15:13:46.603878Z	
+2025-10-01T15:13:46.604166Z	added 1550 packages, and audited 1573 packages in 1m
+2025-10-01T15:13:46.604779Z	
+2025-10-01T15:13:46.604984Z	198 packages are looking for funding
+2025-10-01T15:13:46.6051Z	  run `npm fund` for details
+2025-10-01T15:13:46.605829Z	
+2025-10-01T15:13:46.605983Z	found 0 vulnerabilities
+2025-10-01T15:13:46.647271Z	Executing user command: npm run build
+2025-10-01T15:13:47.010468Z	
+2025-10-01T15:13:47.0107Z	> puter.com@2.5.1 build
+2025-10-01T15:13:47.010867Z	> cd src/gui; node ./build.js
+2025-10-01T15:13:47.011006Z	
+2025-10-01T15:13:47.56154Z	Reading extensions from /opt/buildhome/repo/src/gui/src/extensions
+2025-10-01T15:13:47.78595Z	webpack opts {
+2025-10-01T15:13:47.786358Z	  context: '/opt/buildhome/repo/src/gui',
+2025-10-01T15:13:47.786479Z	  entry: [
+2025-10-01T15:13:47.786571Z	    './src/init_sync.js',
+2025-10-01T15:13:47.786707Z	    './src/init_async.js',
+2025-10-01T15:13:47.786889Z	    './src/initgui.js',
+2025-10-01T15:13:47.787092Z	    './src/helpers.js',
+2025-10-01T15:13:47.787231Z	    './src/IPC.js',
+2025-10-01T15:13:47.7874Z	    './src/globals.js',
+2025-10-01T15:13:47.78751Z	    './src/i18n/i18n.js',
+2025-10-01T15:13:47.787615Z	    './src/keyboard.js',
+2025-10-01T15:13:47.787714Z	    './src/index.js',
+2025-10-01T15:13:47.787809Z	    '/opt/buildhome/repo/src/gui/src/extensions/groups-manager.js',
+2025-10-01T15:13:47.787921Z	    '/opt/buildhome/repo/src/gui/src/extensions/modify-user-options-menu.js'
+2025-10-01T15:13:47.788012Z	  ],
+2025-10-01T15:13:47.7881Z	  output: {
+2025-10-01T15:13:47.788283Z	    path: '/opt/buildhome/repo/src/gui/dist',
+2025-10-01T15:13:47.788394Z	    filename: 'bundle.min.js'
+2025-10-01T15:13:47.788488Z	  },
+2025-10-01T15:13:47.788585Z	  plugins: [
+2025-10-01T15:13:47.788681Z	    BannerPlugin { options: [Object], banner: [Function (anonymous)] }
+2025-10-01T15:13:47.788775Z	  ],
+2025-10-01T15:13:47.788895Z	  resolve: {
+2025-10-01T15:13:47.789027Z	    alias: {
+2025-10-01T15:13:47.789131Z	      '@heyputer/putility': '/opt/buildhome/repo/src/putility/index.js'
+2025-10-01T15:13:47.789243Z	    },
+2025-10-01T15:13:47.789356Z	    extensions: [ '.js' ]
+2025-10-01T15:13:47.789469Z	  },
+2025-10-01T15:13:47.789567Z	  mode: 'production',
+2025-10-01T15:13:47.789665Z	  devtool: 'source-map',
+2025-10-01T15:13:47.789759Z	  optimization: { minimize: true }
+2025-10-01T15:13:47.789868Z	}
+2025-10-01T15:13:48.164271Z	/index.js: 0
+2025-10-01T15:13:56.981097Z	asset bundle.min.js 2.32 MiB [emitted] [minimized] [big] (name: main) 2 related assets
+2025-10-01T15:13:56.981463Z	orphan modules 1.54 MiB [orphan] 100 modules
+2025-10-01T15:13:56.981649Z	runtime modules 396 bytes 2 modules
+2025-10-01T15:13:56.981829Z	built modules 2.55 MiB [built]
+2025-10-01T15:13:56.98195Z	  modules by path ./src/ 2.48 MiB 52 modules
+2025-10-01T15:13:56.982182Z	  modules by path ../putility/ 67 KiB
+2025-10-01T15:13:56.982331Z	    modules by path ../putility/src/libs/*.js 29.7 KiB 8 modules
+2025-10-01T15:13:56.982449Z	    modules by path ../putility/src/features/ 19.7 KiB 8 modules
+2025-10-01T15:13:56.982611Z	    modules by path ../putility/src/bases/*.js 4.13 KiB
+2025-10-01T15:13:56.983143Z	      ../putility/src/bases/FeatureBase.js 1.26 KiB [built] [code generated]
+2025-10-01T15:13:56.983322Z	      ../putility/src/bases/BasicBase.js 2.87 KiB [built] [code generated]
+2025-10-01T15:13:56.983427Z	    + 5 modules
+2025-10-01T15:13:56.98349Z	
+2025-10-01T15:13:56.983546Z	WARNING in ../putility/src/features/NodeModuleDIFeature.js 56:19-32
+2025-10-01T15:13:56.983602Z	Critical dependency: the request of a dependency is an expression
+2025-10-01T15:13:56.983657Z	 @ ../putility/src/AdvancedBase.js 26:8-49
+2025-10-01T15:13:56.983713Z	 @ ../putility/index.js 19:25-54
+2025-10-01T15:13:56.983908Z	 @ ./src/init_async.js 29:0-42 30:4-12
+2025-10-01T15:13:56.983989Z	
+2025-10-01T15:13:56.984049Z	WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+2025-10-01T15:13:56.98411Z	This can impact web performance.
+2025-10-01T15:13:56.984165Z	Assets: 
+2025-10-01T15:13:56.98422Z	  bundle.min.js (2.32 MiB)
+2025-10-01T15:13:56.984275Z	
+2025-10-01T15:13:56.984336Z	WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+2025-10-01T15:13:56.984393Z	Entrypoints:
+2025-10-01T15:13:56.984454Z	  main (2.32 MiB)
+2025-10-01T15:13:56.984507Z	      bundle.min.js
+2025-10-01T15:13:56.984561Z	
+2025-10-01T15:13:56.984618Z	WARNING in webpack performance recommendations: 
+2025-10-01T15:13:56.984672Z	You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+2025-10-01T15:13:56.984729Z	For more info visit https://webpack.js.org/guides/code-splitting/
+2025-10-01T15:13:56.984786Z	
+2025-10-01T15:13:56.984854Z	1 warning has detailed information that is not shown.
+2025-10-01T15:13:56.984929Z	Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+2025-10-01T15:13:56.985002Z	
+2025-10-01T15:13:56.98506Z	webpack 5.102.0 compiled with 4 warnings in 8824 ms
+2025-10-01T15:13:57.03065Z	Finished
+2025-10-01T15:13:57.964772Z	Checking for configuration in a Wrangler configuration file (BETA)
+2025-10-01T15:13:57.965425Z	
+2025-10-01T15:13:59.067384Z	No wrangler.toml file found. Continuing.
+2025-10-01T15:13:59.068397Z	Note: No functions dir at /functions found. Skipping.
+2025-10-01T15:13:59.068579Z	Validating asset output directory
+2025-10-01T15:14:01.927456Z	Deploying your site to Cloudflare's global network...
+2025-10-01T15:14:03.656446Z	Parsed 2 valid redirect rules.
+2025-10-01T15:14:03.657246Z	Found invalid redirect lines:
+2025-10-01T15:14:03.657409Z	  - #1: /gui.js 200
+2025-10-01T15:14:03.657527Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.657638Z	  - #2: /bundle.min.js 200
+2025-10-01T15:14:03.657771Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.657911Z	  - #3: /bundle.min.js.map 200
+2025-10-01T15:14:03.658035Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.658168Z	  - #4: /bundle.min.css 200
+2025-10-01T15:14:03.658261Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.658319Z	  - #5: /favicons/* 200
+2025-10-01T15:14:03.658379Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.658435Z	  - #6: /images/* 200
+2025-10-01T15:14:03.65849Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.658544Z	  - #7: /fonts/* 200
+2025-10-01T15:14:03.658609Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.658666Z	  - #8: /manifest.json 200
+2025-10-01T15:14:03.658731Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.65879Z	  - #9: /favicon.ico 200
+2025-10-01T15:14:03.658854Z	    URLs should either be relative (e.g. begin with a forward-slash), or use HTTPS (e.g. begin with "https://").
+2025-10-01T15:14:03.658926Z	  - #10: / /index.html 200
+2025-10-01T15:14:03.65898Z	    Infinite loop detected in this rule and has been ignored. This will cause a redirect to strip `.html` or `/index` and end up triggering this rule again. Please fix or remove this rule to silence this warning.
+2025-10-01T15:14:03.659041Z	  - #13: /app/* /index.html 200
+2025-10-01T15:14:03.65911Z	    Infinite loop detected in this rule and has been ignored. This will cause a redirect to strip `.html` or `/index` and end up triggering this rule again. Please fix or remove this rule to silence this warning.
+2025-10-01T15:14:03.659168Z	  - #14: /* /index.html 200
+2025-10-01T15:14:03.659229Z	    Infinite loop detected in this rule and has been ignored. This will cause a redirect to strip `.html` or `/index` and end up triggering this rule again. Please fix or remove this rule to silence this warning.
+2025-10-01T15:14:04.926635Z	Uploading... (47/49)
+2025-10-01T15:14:07.229411Z	Uploading... (48/49)
+2025-10-01T15:14:07.642331Z	Uploading... (49/49)
+2025-10-01T15:14:07.642634Z	✨ Success! Uploaded 2 files (47 already uploaded) (3.04 sec)
+2025-10-01T15:14:07.642802Z	
+2025-10-01T15:14:07.991324Z	✨ Upload complete!
+2025-10-01T15:14:13.308821Z	Success: Assets published!
+2025-10-01T15:14:15.270366Z	Success: Your site was deployed!

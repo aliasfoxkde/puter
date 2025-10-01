@@ -449,28 +449,34 @@ window.update_auth_data = async (auth_token, user)=>{
     // get .profile file and update user profile
     // ----------------------------------------------------
     user.profile = {};
-    puter.fs.read('/'+user.username+'/Public/.profile').then((blob)=>{
-        blob.text()
-        .then(text => {
-            const profile = JSON.parse(text);
-            if(profile.picture){
-                window.user.profile.picture = html_encode(profile.picture);
-            }
+    if (window.static_mode) {
+        console.debug('[Static Mode] Skipping profile read; using default/empty profile');
+    } else {
+        puter.fs.read('/' + user.username + '/Public/.profile').then((blob) => {
+            blob.text()
+                .then(text => {
+                    const profile = JSON.parse(text);
+                    if (profile.picture) {
+                        window.user.profile.picture = html_encode(profile.picture);
+                    }
 
-            // update profile picture in GUI
-            if(window.user.profile.picture){
-                $('.profile-pic').css('background-image', 'url('+window.user.profile.picture+')');
+                    // update profile picture in GUI
+                    if (window.user.profile.picture) {
+                        $('.profile-pic').css('background-image', 'url(' + window.user.profile.picture + ')');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error converting Blob to JSON:', error);
+                });
+        }).catch((e) => {
+            if (e?.code === "subject_does_not_exist") {
+                // create .profile file when backend is available
+                if (!window.static_mode) {
+                    puter.fs.write('/' + user.username + '/Public/.profile', JSON.stringify({}));
+                }
             }
-        })
-        .catch(error => {
-            console.error('Error converting Blob to JSON:', error);
         });
-    }).catch((e)=>{
-        if(e?.code === "subject_does_not_exist"){
-            // create .profile file
-            puter.fs.write('/'+user.username+'/Public/.profile', JSON.stringify({}));
-        }
-    });
+    }
 
     // ----------------------------------------------------
 
@@ -876,6 +882,11 @@ window.available_templates = () => {
     // Initialize with empty array immediately
     window.file_templates = []
 
+    if (window.static_mode) {
+        console.debug('[Static Mode] Skipping template discovery; using empty templates');
+        return window.file_templates;
+    }
+
     const loadTemplates = async () => {
         try{
             // Directly check the templates directory
@@ -898,7 +909,7 @@ window.available_templates = () => {
                     : element.name.slice(extIndex + 1);
 
                 if(extension == "txt") extension = "text"
-                
+
                 const _path = path.join(templatesPath, element.name);
 
                 const itemStructure = {
@@ -909,11 +920,11 @@ window.available_templates = () => {
                 }
                 result.push(itemStructure)
             });
-            
+
             // Assign to window.file_templates when ready
             window.file_templates = result
             return result
-            
+
         } catch (err) {
             console.log(err)
             window.file_templates = []
@@ -1729,10 +1740,15 @@ window.determine_website_url = function(fsentry_path){
 }
 
 window.update_sites_cache = function(){
+    if (window.static_mode) {
+        console.debug('[Static Mode] Skipping sites cache load; using empty list');
+        window.sites = [];
+        return Promise.resolve([]);
+    }
     return puter.hosting.list((sites)=>{
-        if(sites && sites.length > 0){
+        if (sites && sites.length > 0) {
             window.sites = sites;
-        }else{
+        } else {
             window.sites = [];
         }
     })
@@ -2506,10 +2522,32 @@ window.store_auto_arrange_preference = (preference)=>{
 }
 
 window.get_auto_arrange_data = async()=>{
-    const preferenceValue = await puter.kv.get('user_preferences.auto_arrange_desktop');
-    window.is_auto_arrange_enabled = preferenceValue === null ? true : preferenceValue;
-    const positions = await puter.kv.get('desktop_item_positions')
-    window.desktop_item_positions =  (!positions || typeof positions !== 'object' || Array.isArray(positions)) ? {} : positions;
+    if (window.static_mode) {
+        window.is_auto_arrange_enabled = true;
+        window.desktop_item_positions = {};
+        console.debug('[Static Mode] Using default auto-arrange settings');
+        return;
+    }
+    try {
+        const preferenceValue = await puter.kv.get('user_preferences.auto_arrange_desktop');
+        window.is_auto_arrange_enabled = preferenceValue === null ? true : preferenceValue;
+    } catch (e) {
+        if (window.static_mode) {
+            window.is_auto_arrange_enabled = true;
+        } else {
+            console.error('Error getting auto arrange preference:', e);
+        }
+    }
+    try {
+        const positions = await puter.kv.get('desktop_item_positions');
+        window.desktop_item_positions = (!positions || typeof positions !== 'object' || Array.isArray(positions)) ? {} : positions;
+    } catch (e) {
+        if (window.static_mode) {
+            window.desktop_item_positions = {};
+        } else {
+            console.error('Error getting desktop item positions:', e);
+        }
+    }
 }
 
 window.clear_desktop_item_positions = async(el_desktop)=>{

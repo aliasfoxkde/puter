@@ -343,7 +343,16 @@ async function UITaskbar(options){
     //---------------------------------------------
     // add `Trash` to the taskbar
     //---------------------------------------------
-    const trash = await puter.fs.stat({path: window.trash_path, consistency: 'eventual'});
+    let trash = { is_empty: true };
+    if (!window.static_mode) {
+        try {
+            trash = await puter.fs.stat({path: window.trash_path, consistency: 'eventual'});
+        } catch (e) {
+            console.error(e);
+        }
+    } else {
+        console.debug('[Static Mode] Skipping trash stat; assuming empty');
+    }
     if(window.socket){
         window.socket.emit('trash.is_empty', {is_empty: trash.is_empty});
     }

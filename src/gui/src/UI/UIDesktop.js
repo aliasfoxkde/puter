@@ -107,46 +107,50 @@ async function UIDesktop(options) {
     };
 
     // Give Camera and Recorder write permissions to Desktop
-    puter.kv.get('has_set_default_app_user_permissions').then(async (user_permissions) => {
-        if (!user_permissions) {
-            // Camera
-            try {
-                await fetch(window.api_origin + "/auth/grant-user-app", {
-                    "headers": {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + window.auth_token,
-                    },
-                    "body": JSON.stringify({
-                        app_uid: 'app-5584fbf7-ed69-41fc-99cd-85da21b1ef51',
-                        permission: `fs:${html_encode(window.desktop_path)}:write`
-                    }),
-                    "method": "POST",
-                });
-            } catch (err) {
-                console.error(err);
-            }
+    if (window.static_mode) {
+        console.debug('[Static Mode] Skipping grant-user-app permission setup');
+    } else {
+        puter.kv.get('has_set_default_app_user_permissions').then(async (user_permissions) => {
+            if (!user_permissions) {
+                // Camera
+                try {
+                    await fetch(window.api_origin + "/auth/grant-user-app", {
+                        "headers": {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + window.auth_token,
+                        },
+                        "body": JSON.stringify({
+                            app_uid: 'app-5584fbf7-ed69-41fc-99cd-85da21b1ef51',
+                            permission: `fs:${html_encode(window.desktop_path)}:write`
+                        }),
+                        "method": "POST",
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
 
-            // Recorder
-            try {
-                await fetch(window.api_origin + "/auth/grant-user-app", {
-                    "headers": {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + window.auth_token,
-                    },
-                    "body": JSON.stringify({
-                        app_uid: 'app-7bdca1a4-6373-4c98-ad97-03ff2d608ca1',
-                        permission: `fs:${html_encode(window.desktop_path)}:write`
-                    }),
-                    "method": "POST",
-                });
-            } catch (err) {
-                console.error(err);
-            }
+                // Recorder
+                try {
+                    await fetch(window.api_origin + "/auth/grant-user-app", {
+                        "headers": {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + window.auth_token,
+                        },
+                        "body": JSON.stringify({
+                            app_uid: 'app-7bdca1a4-6373-4c98-ad97-03ff2d608ca1',
+                            permission: `fs:${html_encode(window.desktop_path)}:write`
+                        }),
+                        "method": "POST",
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
 
-            // Set flag to true
-            puter.kv.set('has_set_default_app_user_permissions', true);
-        }
-    })
+                // Set flag to true
+                puter.kv.set('has_set_default_app_user_permissions', true);
+            }
+        })
+    }
     // connect socket.
     window.socket = io(window.gui_origin + '/', {
         auth: {
@@ -1080,7 +1084,11 @@ async function UIDesktop(options) {
         // perform readdirs for caching purposes
 
         // home directory
-        puter.fs.readdir({path: window.home_path, consistency: 'strong'});
+        if (!window.static_mode) {
+            puter.fs.readdir({path: window.home_path, consistency: 'strong'});
+        } else {
+            console.debug('[Static Mode] Skipping home readdir cache');
+        }
 
         // Show welcome window if user hasn't already seen it and hasn't directly navigated to an app 
         if (!window.url_paths[0]?.toLocaleLowerCase() === 'app' || !window.url_paths[1]) {

@@ -52,44 +52,48 @@ export class ThemeService extends Service {
         this.save_cooldown_ = undefined;
 
         // Load theme data using .then() for non-blocking operation
-        puter.fs.read(PUTER_THEME_DATA_FILENAME).then(async (data) => {
-            try {
-                if ( typeof data === 'object' ) {
-                    data = await data.text();
-                }
-                
-                if ( data ) {
-                    try {
-                        data = JSON.parse(data.toString());
-                        if ( data && data.colors ) {
-                            this.state = {
-                                ...this.state,
-                                ...data.colors,
-                            };
-                            this.reload_();
-                        }
-                    } catch (e) {
-                        console.error(e);
-                        UIAlert({
-                            title: 'Error loading theme data',
-                            message: `Could not parse "${PUTER_THEME_DATA_FILENAME}": ` +
-                                e.message,
-                        });
+        if (window.static_mode) {
+            console.debug('[Static Mode] ThemeService: using default theme; skipping KV read');
+        } else {
+            puter.fs.read(PUTER_THEME_DATA_FILENAME).then(async (data) => {
+                try {
+                    if ( typeof data === 'object' ) {
+                        data = await data.text();
                     }
-                }
-            } catch (e) {
-                console.error('Error processing theme data:', e);
-            }
-        }).catch((e) => {
-            if ( e.code !== 'subject_does_not_exist' ) {
-                // TODO: once we have an event log,
-                //       log this error to the event log
-                console.error(e);
 
-                // We don't show an alert because it's likely
-                // other things also aren't working.
-            }
-        });
+                    if ( data ) {
+                        try {
+                            data = JSON.parse(data.toString());
+                            if ( data && data.colors ) {
+                                this.state = {
+                                    ...this.state,
+                                    ...data.colors,
+                                };
+                                this.reload_();
+                            }
+                        } catch (e) {
+                            console.error(e);
+                            UIAlert({
+                                title: 'Error loading theme data',
+                                message: `Could not parse "${PUTER_THEME_DATA_FILENAME}": ` +
+                                    e.message,
+                            });
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error processing theme data:', e);
+                }
+            }).catch((e) => {
+                if ( e.code !== 'subject_does_not_exist' ) {
+                    // TODO: once we have an event log,
+                    //       log this error to the event log
+                    console.error(e);
+
+                    // We don't show an alert because it's likely
+                    // other things also aren't working.
+                }
+            });
+        }
     }
 
     reset () {
