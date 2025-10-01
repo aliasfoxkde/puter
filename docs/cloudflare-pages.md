@@ -127,3 +127,10 @@ Notes:
 
 You can now deploy the GUI as a static site on Cloudflare Pages that connects to your Puter backend.
 
+#### Submodules overview (for context)
+- submodules/v86: Emulator BIOS/build artifacts served by backend for built-in emulator (not used by GUI build)
+- submodules/twisp: MercuryWorkshop Twisp library (backend/dev tooling; not needed for GUI build)
+- submodules/epoxy-tls: MercuryWorkshop Epoxy TLS (backend/dev tooling; not needed for GUI build)
+- submodules/wiki: Project wiki content (docs only; not needed for GUI build)
+
+
