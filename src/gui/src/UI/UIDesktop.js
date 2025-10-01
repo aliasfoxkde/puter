@@ -728,22 +728,43 @@ async function UIDesktop(options) {
         window.history.pushState(null, document.title, '/');
     }
 
-    // update local user preferences
+    // update local user preferences (robust in static mode)
+    let show_hidden_files_val = false;
+    try {
+        const raw = await puter.kv.get('user_preferences.show_hidden_files');
+        if (raw === null || raw === undefined || raw === 'undefined') show_hidden_files_val = false;
+        else if (typeof raw === 'string') show_hidden_files_val = JSON.parse(raw);
+        else show_hidden_files_val = !!raw;
+    } catch (_) { show_hidden_files_val = false; }
+
+    let language_val = navigator.language || 'en';
+    try {
+        const lang = await puter.kv.get('user_preferences.language');
+        if (lang !== null && lang !== undefined && lang !== 'undefined') language_val = lang;
+    } catch (_) {}
+
+    let clock_visible_val = true;
+    try {
+        const cv = await puter.kv.get('user_preferences.clock_visible');
+        if (cv !== null && cv !== undefined && cv !== 'undefined') clock_visible_val = !!cv;
+    } catch (_) {}
+
     const user_preferences = {
-        show_hidden_files: JSON.parse(await puter.kv.get('user_preferences.show_hidden_files')),
-        language: await puter.kv.get('user_preferences.language'),
-        clock_visible: await puter.kv.get('user_preferences.clock_visible'),
+        show_hidden_files: show_hidden_files_val,
+        language: language_val,
+        clock_visible: clock_visible_val,
     };
 
     // update default apps
-    {
-        const entries = await puter.kv.list('user_preferences.default_apps.*', true);
-        for ( const entry of entries ) {
-            user_preferences[entry.key.substring(17)] = entry.value;
-        }
-
-        window.update_user_preferences(user_preferences);
+    if (!window.static_mode) {
+        try {
+            const entries = await puter.kv.list('user_preferences.default_apps.*', true);
+            for ( const entry of entries ) {
+                user_preferences[entry.key.substring(17)] = entry.value;
+            }
+        } catch (_) {}
     }
+    window.update_user_preferences(user_preferences);
 
     // Append to <body>
     $('body').append(h);
@@ -1314,7 +1335,12 @@ async function UIDesktop(options) {
         if (!qparams.has('c')) {
             let posargs = undefined;
             if (window.app_query_params && window.app_query_params.posargs) {
-                posargs = JSON.parse(window.app_query_params.posargs);
+                try {
+                    const s = window.app_query_params.posargs;
+                    if (s !== 'undefined' && s !== undefined && s !== null) {
+                        posargs = JSON.parse(s);
+                    }
+                } catch (_) { posargs = undefined; }
             }
             launch_app({
                 app: window.app_launched_from_url.name,
