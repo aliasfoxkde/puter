@@ -605,7 +605,7 @@ window.initgui = async function(options){
             if(!window.embedded_in_popup){
                 await window.get_auto_arrange_data()
                 if (window.static_mode) {
-                    const desktop_fsentry = { name: 'Desktop', is_dir: true, path: window.desktop_path };
+                    const desktop_fsentry = { uid: 'local-desktop', name: 'Desktop', is_dir: true, path: window.desktop_path };
                     UIDesktop({ desktop_fsentry });
                 } else {
                     puter.fs.stat({path: window.desktop_path, consistency: 'eventual'}).then(desktop_fsentry => {
@@ -1071,7 +1071,7 @@ window.initgui = async function(options){
         if(!window.embedded_in_popup){
             await window.get_auto_arrange_data();
             if (window.static_mode) {
-                const desktop_fsentry = { name: 'Desktop', is_dir: true, path: window.desktop_path };
+                const desktop_fsentry = { uid: 'local-desktop', name: 'Desktop', is_dir: true, path: window.desktop_path };
                 UIDesktop({ desktop_fsentry });
             } else {
                 puter.fs.stat({path: window.desktop_path, consistency: 'eventual'}).then(desktop_fsentry => {
