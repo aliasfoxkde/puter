@@ -604,9 +604,14 @@ window.initgui = async function(options){
             // -------------------------------------------------------------------------------------
             if(!window.embedded_in_popup){
                 await window.get_auto_arrange_data()
-                puter.fs.stat({path: window.desktop_path, consistency: 'eventual'}).then(desktop_fsentry => {
-                    UIDesktop({desktop_fsentry: desktop_fsentry});
-                })
+                if (window.static_mode) {
+                    const desktop_fsentry = { name: 'Desktop', is_dir: true, path: window.desktop_path };
+                    UIDesktop({ desktop_fsentry });
+                } else {
+                    puter.fs.stat({path: window.desktop_path, consistency: 'eventual'}).then(desktop_fsentry => {
+                        UIDesktop({ desktop_fsentry: desktop_fsentry });
+                    })
+                }
             }
             // -------------------------------------------------------------------------------------
             // If embedded in a popup, send the token to the opener and close the popup
