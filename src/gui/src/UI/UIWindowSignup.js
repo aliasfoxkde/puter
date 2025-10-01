@@ -275,6 +275,41 @@ function UIWindowSignup(options){
             if(window.custom_headers)
                 headers = window.custom_headers;
 
+            // Static mode: local signup without backend
+            if (window.static_mode) {
+                try {
+                    let users = [];
+                    try { users = JSON.parse(localStorage.getItem('local_users')) || []; } catch(_) { users = []; }
+                    const exists = users.find(u => u.username.toLowerCase() === String(username).toLowerCase() || (u.email && u.email.toLowerCase() === String(email).toLowerCase()));
+                    if (exists) {
+                        $(el_window).find('.signup-error-msg').html('User already exists.');
+                        $(el_window).find('.signup-error-msg').fadeIn();
+                        $(el_window).find('.signup-btn').prop('disabled', false);
+                        return;
+                    }
+                    const uuid = 'local:' + username;
+                    users.push({ username, email, password, uuid });
+                    localStorage.setItem('local_users', JSON.stringify(users));
+                    const token = 'local-' + uuid + '-' + Date.now();
+                    window.update_auth_data(token, { uuid, username, email, is_temp: false, profile: {} });
+                    if(options.reload_on_success){
+                        window.onbeforeunload = null;
+                        const cleanUrl = window.location.origin + window.location.pathname;
+                        window.location.replace(cleanUrl);
+                    }else{
+                        // In static mode, skip email confirmation flows
+                        resolve(true);
+                    }
+                    return;
+                } catch (e) {
+                    console.error('Local signup failed:', e);
+                    $(el_window).find('.signup-error-msg').html('Local signup error.');
+                    $(el_window).find('.signup-error-msg').fadeIn();
+                    $(el_window).find('.signup-btn').prop('disabled', false);
+                    return;
+                }
+            }
+
             // Include captcha in request only if required
             const requestData = {
                 username: username,

@@ -184,7 +184,50 @@ async function UIWindowLogin(options){
     
             // Disable the login button to prevent multiple submissions
             $(el_window).find('.login-btn').prop('disabled', true);
-    
+
+            // Static mode: local authentication without backend
+            if (window.static_mode) {
+                try {
+                    // Load local users or seed with admin/password
+                    let users = [];
+                    try { users = JSON.parse(localStorage.getItem('local_users')) || []; } catch(_) { users = []; }
+                    if (!users.find(u => u.username === 'admin')) {
+                        users.push({ username: 'admin', email: 'admin@local', password: 'password', uuid: 'local:admin' });
+                        localStorage.setItem('local_users', JSON.stringify(users));
+                    }
+                    const identifier = String(email_username).toLowerCase();
+                    const user = users.find(u =>
+                        u.username.toLowerCase() === identifier || (u.email && u.email.toLowerCase() === identifier)
+                    );
+                    if (user && user.password === password) {
+                        const token = 'local-' + user.uuid + '-' + Date.now();
+                        const userObj = { uuid: user.uuid, username: user.username, email: user.email || '', is_temp: false, profile: {} };
+                        window.update_auth_data(token, userObj);
+                        if(options.reload_on_success){
+                            sessionStorage.setItem('playChimeNextUpdate', 'yes');
+                            window.onbeforeunload = null;
+                            const cleanUrl = window.location.origin + window.location.pathname;
+                            window.location.replace(cleanUrl);
+                        } else {
+                            resolve(true);
+                        }
+                        $(el_window).close();
+                        return;
+                    } else {
+                        $(el_window).find('.login-error-msg').html('Invalid username/email or password.');
+                        $(el_window).find('.login-error-msg').fadeIn();
+                        $(el_window).find('.login-btn').prop('disabled', false);
+                        return;
+                    }
+                } catch(e) {
+                    console.error('Local auth failed:', e);
+                    $(el_window).find('.login-error-msg').html('Local authentication error.');
+                    $(el_window).find('.login-error-msg').fadeIn();
+                    $(el_window).find('.login-btn').prop('disabled', false);
+                    return;
+                }
+            }
+
             $.ajax({
                 url: window.gui_origin + "/login",
                 type: 'POST',

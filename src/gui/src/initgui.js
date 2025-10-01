@@ -571,12 +571,16 @@ window.initgui = async function(options){
     if(window.is_auth()){
         // try to get user data using /whoami, only if that data is missing
         if(!whoami){
-            try{
-                whoami = await puter.os.user({query: 'icon_size=64'});
-            }catch(e){
-                if(e.status === 401){
-                    bad_session_logout();
-                    return;
+            if (window.static_mode) {
+                whoami = window.user;
+            } else {
+                try{
+                    whoami = await puter.os.user({query: 'icon_size=64'});
+                }catch(e){
+                    if(e.status === 401){
+                        bad_session_logout();
+                        return;
+                    }
                 }
             }
         }
@@ -922,10 +926,12 @@ window.initgui = async function(options){
             UIWindowSessionList();
         }
         else{
-            const resp = await fetch(window.gui_origin + '/whoarewe');
-            const whoarewe = await resp.json();
+            let whoarewe = { disable_user_signup: false };
+            if (!window.static_mode) {
+                const resp = await fetch(window.gui_origin + '/whoarewe');
+                whoarewe = await resp.json();
+            }
             await UIWindowLogin({
-                // show_signup_button: 
                 reload_on_success: true,
                 send_confirmation_code: false,
                 show_signup_button: ( ! whoarewe.disable_user_signup ),
@@ -1059,9 +1065,14 @@ window.initgui = async function(options){
         // -------------------------------------------------------------------------------------
         if(!window.embedded_in_popup){
             await window.get_auto_arrange_data();
-            puter.fs.stat({path: window.desktop_path, consistency: 'eventual'}).then(desktop_fsentry => {
-                UIDesktop({ desktop_fsentry: desktop_fsentry });
-            })
+            if (window.static_mode) {
+                const desktop_fsentry = { name: 'Desktop', is_dir: true, path: window.desktop_path };
+                UIDesktop({ desktop_fsentry });
+            } else {
+                puter.fs.stat({path: window.desktop_path, consistency: 'eventual'}).then(desktop_fsentry => {
+                    UIDesktop({ desktop_fsentry: desktop_fsentry });
+                })
+            }
         }
         // -------------------------------------------------------------------------------------
         // If embedded in a popup, send the 'ready' event to referrer and close the popup

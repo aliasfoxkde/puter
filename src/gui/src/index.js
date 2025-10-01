@@ -58,6 +58,12 @@ window.gui = async (options) => {
     window.require_email_verification_to_publish_website = options.require_email_verification_to_publish_website ?? true;
     window.disable_temp_users = options.disable_temp_users ?? false;
     window.co_isolation_enabled = options.co_isolation_enabled;
+    // Static mode (no backend) support
+    window.static_mode = !!options.static_mode;
+    if (window.static_mode) {
+        // Ensure temp users path is disabled to avoid captcha/signup
+        window.disable_temp_users = true;
+    }
 
     // DEV: Load the initgui.js file if we are in development mode
     if(!window.gui_env || window.gui_env === "dev"){
@@ -78,8 +84,10 @@ window.gui = async (options) => {
         try { await window.loadCSS('/bundle.min.css'); } catch(e) { try { await window.loadCSS('/dist/bundle.min.css'); } catch(_) {} }
     }
 
-    // Load Cloudflare Turnstile script
-    await window.loadScript('https://challenges.cloudflare.com/turnstile/v0/api.js', { defer: true });
+    // Load Cloudflare Turnstile script (skip in static mode)
+    if (!window.static_mode) {
+        await window.loadScript('https://challenges.cloudflare.com/turnstile/v0/api.js', { defer: true });
+    }
 
     // 🚀 Launch the GUI 🚀
     window.initgui(options);

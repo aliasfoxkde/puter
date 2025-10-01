@@ -412,6 +412,8 @@ function generateDevHtml(options){
         const guiInitConfig = {};
         if (options.api_origin) guiInitConfig.api_origin = options.api_origin;
         if (options.gui_origin) guiInitConfig.gui_origin = options.gui_origin;
+        // Static mode: when no API origin is provided, run without backend
+        if (!options.api_origin) guiInitConfig.static_mode = true;
         h += `
         <script type="text/javascript">
         window.addEventListener('load', function() {`
