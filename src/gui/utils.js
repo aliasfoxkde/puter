@@ -373,8 +373,9 @@ function generateDevHtml(options){
         }
 
 
-        // PROD: gui.js
-        if(options.env === 'prod'){
+        // PROD: load compiled bundle first, then gui.js which calls window.initgui()
+        if (options.env === 'prod') {
+            h += `<script src="/bundle.min.js"></script>`;
             h += `<script src="/gui.js"></script>`;
         }
         // DEV: load every JS file individually
