@@ -63,7 +63,13 @@ class WriteCommonFeature {
             const { file, user: user_let } = this.values;
             let user = user_let;
 
-            if ( ! user ) user = this.values.actor.type.user;
+            if ( ! user ) {
+                if (this.values.actor && this.values.actor.type && this.values.actor.type.user) {
+                    user = this.values.actor.type.user;
+                } else {
+                    throw new Error('User information is required for storage verification');
+                }
+            }
 
             const usage = await sizeService.get_usage(user.id);
             const capacity = await sizeService.get_storage_capacity(user.id);

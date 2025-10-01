@@ -322,6 +322,9 @@ class BaseOperation extends AdvancedBase {
     async run (values) {
         this.values = values;
 
+        // Get actor from values or context
+        values.actor = values.actor ?? Context.get('actor');
+
         values.user = values.user ??
             (values.actor ? values.actor.type.user : undefined);
 

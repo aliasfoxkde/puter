@@ -634,6 +634,12 @@ class PuterFSProvider extends putility.AdvancedBase {
         delete fsentry_tmp.thumbnail_promise;
 
         const ts = Math.round(Date.now() / 1000);
+
+        // Defensive null checking for actor
+        if (!actor || !actor.type || !actor.type.user) {
+            throw new Error('Actor or user information is missing in write_new operation');
+        }
+
         const raw_fsentry = {
             uuid: uid,
             is_dir: 0,
