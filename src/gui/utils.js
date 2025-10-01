@@ -343,6 +343,24 @@ function generateDevHtml(options){
         // specifically, the `puter.js` script
         // This line is also present verbatim in `src/index.js` for production builds
         h += `<script>window.puter_gui_enabled = true;</script>`;
+        // Polyfill for service scripts (static Pages build): define service_script_api_promise
+        h += `<script>(function(){
+            try {
+                if (!globalThis.service_script_api_promise) {
+                    var resolve, reject;
+                    var p = new Promise(function(res, rej){ resolve = res; reject = rej; });
+                    p.resolve = resolve; p.reject = reject;
+                    globalThis.service_script_api_promise = p;
+                }
+                if (!globalThis.service_script) {
+                    globalThis.service_script = async function(fn){
+                        try { await fn(await globalThis.service_script_api_promise); }
+                        catch(e){ console.error('service_script(ERROR)', e); }
+                    };
+                }
+            } catch(e){ console.warn('service_script polyfill failed:', e && e.message || e); }
+        })();</script>`;
+
 
         // DEV: load every JS library individually
         if(options.env === 'dev'){
