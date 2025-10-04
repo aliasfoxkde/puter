@@ -1073,8 +1073,25 @@ window.initgui = async function(options){
             is_temp: false
         };
 
-        // Defer login event until after handlers are attached to ensure UIDesktop/UI components are ready
-        setTimeout(() => { $(document).trigger('login'); }, 0);
+        // Trigger login only after the jQuery 'login' handler is actually attached
+        // We poll jQuery's internal event registry to detect when the handler is bound.
+        (function waitForLoginHandler(attempts = 0) {
+            try {
+                const ev = (window.jQuery && window.jQuery._data) ? window.jQuery._data(document, 'events') : null;
+                const hasHandler = !!(ev && ev.login && ev.login.length > 0);
+                if (hasHandler) {
+                    $(document).trigger('login');
+                    return;
+                }
+            } catch (_) { /* ignore */ }
+            // Backoff slightly if needed, but keep it very short to avoid visible delay
+            if (attempts < 200) {
+                setTimeout(() => waitForLoginHandler(attempts + 1), 10);
+            } else {
+                // Fallback: trigger anyway after ~2s to avoid getting stuck
+                $(document).trigger('login');
+            }
+        })();
     }
 
     // if there is at least one window open (only non-Explorer windows), ask user for confirmation when navigating away from puter
